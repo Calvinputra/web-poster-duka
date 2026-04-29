@@ -1,0 +1,1 @@
+export { PosterShareModal } from '../PosterShareModal'
