@@ -1,0 +1,7 @@
+{
+  "imageBaseName": "be-go-to-heaven",
+  "kubeNamespace": "bni-life",
+  "kubeBaseDeploymentFileName": "be-go-to-heaven",
+  "kubeBaseDeploymentName": "be-go-to-heaven",
+  "imageVersion": "1.0.0"
+}

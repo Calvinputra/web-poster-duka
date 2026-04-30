@@ -1,0 +1,65 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: be-go-to-heaven
+  namespace: bni-life-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: be-go-to-heaven
+  template:
+    metadata:
+      labels:
+        app: be-go-to-heaven
+        team: backend-developer
+    spec:
+      containers:
+        - name: be-go-to-heaven
+          image: ${REGISTRY}/${IMAGE_NAME}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_POSTGRE_POOL_IDLE
+              value: "2"
+            - name: DB_POSTGRE_POOL_MAX
+              value: "10"
+            - name: WEB_PORT
+              value: "8080"
+          envFrom:
+            - secretRef:
+                name: database
+            - secretRef:
+                name: general-backend-golang
+          securityContext:
+            runAsUser: 0
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: be-go-to-heaven
+  namespace: bni-life-dev
+spec:
+  selector:
+    app: be-go-to-heaven
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
+  clusterIP: 10.108.198.60
+---
+# Endpoint
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: be-go-to-heaven
+  namespace: bni-life-uat
+subsets:
+  - addresses:
+      - ip: 10.108.198.60
+    ports:
+      - port: 8080
